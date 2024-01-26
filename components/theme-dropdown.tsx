@@ -14,14 +14,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useThemeStore } from "@/lib/hooks/useTheme";
-type Checked = DropdownMenuCheckboxItemProps["checked"];
+import { useTheme } from 'next-themes'
 
-export default function DropdownMenuCheckboxes() {
-  const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true);
-  const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false);
-  const [showPanel, setShowPanel] = React.useState<Checked>(false);
-
-  const toggleTheme = useThemeStore((state) => state.toggleTheme);
+export default function ThemeDropdown() {
+  const { setTheme } = useTheme();
 
   return (
     <DropdownMenu>
@@ -30,35 +26,27 @@ export default function DropdownMenuCheckboxes() {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="w-32 rounded-xl"
-        onCloseAutoFocus={(e) => e.preventDefault()}
       >
         {/*<DropdownMenuLabel>Appearance</DropdownMenuLabel>*/}
         {/*<DropdownMenuSeparator />*/}
         <DropdownMenuItem
           className="rounded-xl"
-          onClick={() => toggleTheme("dark")}
+          onClick={() => setTheme("dark")}
         >
           Dark
         </DropdownMenuItem>
         <DropdownMenuItem
           className="rounded-xl"
-          onClick={() => toggleTheme("light")}
+          onClick={() => setTheme("light")}
         >
           Light
         </DropdownMenuItem>
-        {/*<DropdownMenuCheckboxItem*/}
-        {/*  checked={showStatusBar}*/}
-        {/*  onCheckedChange={setShowStatusBar}*/}
-        {/*>*/}
-        {/*  Status Bar*/}
-        {/*</DropdownMenuCheckboxItem>*/}
-        {/*<DropdownMenuCheckboxItem*/}
-        {/*  checked={showActivityBar}*/}
-        {/*  onCheckedChange={setShowActivityBar}*/}
-        {/*  disabled*/}
-        {/*>*/}
-        {/*  Activity Bar*/}
-        {/*</DropdownMenuCheckboxItem>*/}
+        <DropdownMenuItem
+          className="rounded-xl"
+          onClick={() => setTheme("system")}
+        >
+          System
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

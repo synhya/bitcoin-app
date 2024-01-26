@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Example from "@/components/simple-line-chart";
 import axios from 'axios'
 import VideoPlayer from '@/components/video-player'

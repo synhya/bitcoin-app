@@ -12,7 +12,7 @@ import {
   navigationMenuTriggerStyle,
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
-import DropdownMenuCheckboxes from "@/components/theme-dropdown";
+import ThemeDropdown from "@/components/theme-dropdown";
 import Link from "next/link";
 import { ListItem } from "@/components/nav-list-item";
 import { Toggle } from "@/components/ui/toggle";
@@ -43,12 +43,11 @@ const GlobalNav = () => {
             <NavigationMenuItem>
               <NavLinkItem path={"/coin"} title={"Bitcoin"} />
             </NavigationMenuItem>
+            <NavigationMenuItem>
+              <ThemeDropdown />
+            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-
-        <div className={"mt-1 ml-1"}>
-          <DropdownMenuCheckboxes />
-        </div>
       </div>
       <div className={"absolute top-1 right-3.5 hidden min-[450px]:flex"}>
         <Toggle>
