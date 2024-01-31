@@ -32,7 +32,7 @@ const GlobalNav = () => {
       className={cn(
         "fixed z-10 h-12 w-screen bg-background/70 transition-colors duration-700",
         {
-          "bg-primary": scrollY > 0,
+          "bg-primary/70": scrollY > 0,
         },
       )}
     >
@@ -40,7 +40,11 @@ const GlobalNav = () => {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem></NavigationMenuItem>
-            <NavigationMenuItem>{"Bitcoin Demo App"}</NavigationMenuItem>
+            <NavigationMenuItem>
+              <p className="text-foreground cursor-default font-semibold text-lg">
+                Bitcoin Demo App
+              </p>
+            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
       </div>
