@@ -58,6 +58,10 @@
   }
 }
 
+.recharts-layer {
+  outline: none !important;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
@@ -70,7 +74,7 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #333;
+  background: #666;
   border-radius: 2px;
 }
 

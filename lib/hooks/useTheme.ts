@@ -1,14 +1,13 @@
 "use client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Theme } from "@/lib/types";
 
 type ThemeState = {
-  theme: Theme;
-  toggleTheme: (theme: Theme) => void;
+  theme: string;
+  toggleTheme: (theme: string) => void;
 };
 
-export const useThemeStore = create(
+const useThemeStore = create(
   persist<ThemeState>(
     (set) => ({
       theme: "dark",

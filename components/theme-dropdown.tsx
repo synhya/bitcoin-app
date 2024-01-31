@@ -13,39 +13,34 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useThemeStore } from "@/lib/hooks/useTheme";
-import { useTheme } from 'next-themes'
+import { useTheme } from "next-themes";
+import { Theme } from "@/lib/types";
+import { Moon, MoonIcon, Sun, SunIcon } from "lucide-react";
 
 export default function ThemeDropdown() {
-  const { setTheme } = useTheme();
+  const { theme, setTheme, systemTheme } = useTheme();
+  const activeTheme = theme !== Theme.system ? theme : systemTheme;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost">Theme</Button>
+        <Button variant="ghost" className="px-2">
+          <MoonIcon />
+          {/*{theme === "dark" ? <Moon /> : <Sun />}*/}
+        </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="w-32 rounded-xl"
-      >
-        {/*<DropdownMenuLabel>Appearance</DropdownMenuLabel>*/}
-        {/*<DropdownMenuSeparator />*/}
+      <DropdownMenuContent className="min-w-fit rounded-xl">
         <DropdownMenuItem
           className="rounded-xl"
-          onClick={() => setTheme("dark")}
+          onClick={() => setTheme(Theme.dark)}
         >
-          Dark
+          다크
         </DropdownMenuItem>
         <DropdownMenuItem
           className="rounded-xl"
-          onClick={() => setTheme("light")}
+          onClick={() => setTheme(Theme.light)}
         >
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          className="rounded-xl"
-          onClick={() => setTheme("system")}
-        >
-          System
+          라이트
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

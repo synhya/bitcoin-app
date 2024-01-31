@@ -1,42 +1,58 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import {
-  DropdownMenu, DropdownMenuCheckboxItem,
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem, DropdownMenuLabel,
+  DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
-import { Table } from '@tanstack/table-core'
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Table } from "@tanstack/table-core";
 import {
   AlignCenterHorizontal,
   ArrowDownIcon,
   ArrowLeftIcon,
-  ArrowRightIcon, ArrowUpDown,
+  ArrowRightIcon,
+  ArrowUpDown,
   ArrowUpIcon,
   ChevronLeftIcon,
-  ChevronRightIcon
-} from 'lucide-react'
+  ChevronRightIcon,
+} from "lucide-react";
 
-import { Column } from "@tanstack/react-table"
-import { cn } from "@/lib/utils"
-import React from 'react'
-import { useRouter } from 'next/navigation'
-
+import { Column } from "@tanstack/react-table";
+import { cn } from "@/lib/utils";
+import React from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePage } from "@/lib/hooks/usePage";
 
 interface DataTablePaginationProps<TData> {
-  table: Table<TData>
+  table: Table<TData>;
 }
 
 export function DataTablePagination<TData>({
   table,
 }: DataTablePaginationProps<TData>) {
+  const searchParams = useSearchParams();
+  const { replace } = useRouter();
+  const pathName = usePathname();
+  const setPageState = usePage((state) => state.setPageState);
+
+  // index start from 0
+  const handlePageClick = (index: number) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("page", (index + 1).toString());
+
+    replace(`${pathName}?${newSearchParams.toString()}#coin-table`);
+  };
+
   return (
     <div className="flex items-center justify-between px-2">
       {/*<div className="flex-1 text-sm text-muted-foreground">*/}
@@ -49,7 +65,8 @@ export function DataTablePagination<TData>({
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
-              table.setPageSize(Number(value))
+              setPageState(Number(value));
+              table.setPageSize(Number(value));
             }}
           >
             <SelectTrigger className="h-8 w-[70px]">
@@ -72,7 +89,7 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() => table.setPageIndex(0)}
+            onClick={() => handlePageClick(0)}
             disabled={!table.getCanPreviousPage()}
           >
             <span className="sr-only">Go to first page</span>
@@ -81,7 +98,10 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="h-8 w-8 p-0"
-            onClick={() => table.previousPage()}
+            onClick={
+              () => handlePageClick(table.getState().pagination.pageIndex - 1)
+              // table.previousPage()
+            }
             disabled={!table.getCanPreviousPage()}
           >
             <span className="sr-only">Go to previous page</span>
@@ -90,7 +110,9 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="h-8 w-8 p-0"
-            onClick={() => table.nextPage()}
+            onClick={() =>
+              handlePageClick(table.getState().pagination.pageIndex + 1)
+            }
             disabled={!table.getCanNextPage()}
           >
             <span className="sr-only">Go to next page</span>
@@ -99,7 +121,7 @@ export function DataTablePagination<TData>({
           <Button
             variant="outline"
             className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            onClick={() => handlePageClick(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
           >
             <span className="sr-only">Go to last page</span>
@@ -108,59 +130,46 @@ export function DataTablePagination<TData>({
         </div>
       </div>
     </div>
-  )
+  );
 }
-
 
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
-  column: Column<TData, TValue>
-  title: string
-  iconDir?: 'left' | 'right'
+  column: Column<TData, TValue>;
+  title: string;
 }
 
-export function DataTableColumnButtonHeader<TData, TValue> ({
+export function DataTableColumnButtonHeader<TData, TValue>({
   column,
   title,
   className,
-  iconDir,
 }: DataTableColumnHeaderProps<TData, TValue>) {
-  if(!column.getCanSort()) {
-    return <div className={cn('w-12', className)}>{title}</div>
+  if (!column.getCanSort()) {
+    return <div className={cn("w-12", className)}>{title}</div>;
   }
 
-  const iconIsRight = (!iconDir || iconDir==='right');
-
   return (
-    <div className={cn(className)}>
-      <Button
-        variant='ghost'
-        onClick={() => column.toggleSorting(
-          column.getIsSorted() === 'asc')}
-        className={cn('h-8 px-2.5')}
-      >
-        {iconIsRight && title}
+    <Button
+      variant="ghost"
+      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      className={cn(
+        "h-8 px-2.5",
         {
-          column.getIsSorted() && (
-            column.getIsSorted() === 'asc' ? (
-              <ArrowDownIcon
-                className={cn('size-4',
-                  iconIsRight ? 'ml-1' : 'mr-1',
-                )}
-              />
-            ) : (
-              <ArrowUpIcon
-                className={cn('size-4',
-                  iconIsRight ? 'ml-1' : 'mr-1',
-                )}
-              />
-            )
-          )
-        }
-        {!iconIsRight && title}
-      </Button>
-    </div>
-  )
+          "pl-2.5 pr-2": !!column.getIsSorted(),
+        },
+        className,
+      )}
+    >
+      {title}
+      {column.getIsSorted() &&
+        (column.getIsSorted() === "asc" ? (
+          <ArrowDownIcon className={cn("size-4 ml-1")} />
+        ) : (
+          <ArrowUpIcon className={cn("size-4 ml-1")} />
+        ))}
+      {/*{!iconIsRight && title}*/}
+    </Button>
+  );
 }
 
 export function DataTableColumnDropDownHeader<TData, TValue>({
@@ -169,7 +178,7 @@ export function DataTableColumnDropDownHeader<TData, TValue>({
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
-    return <div className={cn(className)}>{title}</div>
+    return <div className={cn(className)}>{title}</div>;
   }
 
   return (
@@ -207,11 +216,11 @@ export function DataTableColumnDropDownHeader<TData, TValue>({
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  )
+  );
 }
 
 interface DataTableViewOptionsProps<TData> {
-  table: Table<TData>
+  table: Table<TData>;
 }
 
 export function DataTableViewOptions<TData>({
@@ -220,11 +229,7 @@ export function DataTableViewOptions<TData>({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="ml-auto h-8 flex"
-        >
+        <Button variant="outline" size="sm" className="ml-auto h-8 flex">
           <AlignCenterHorizontal className="mr-2 h-4 w-4" />
           View
         </Button>
@@ -236,7 +241,7 @@ export function DataTableViewOptions<TData>({
           .getAllColumns()
           .filter(
             (column) =>
-              typeof column.accessorFn !== "undefined" && column.getCanHide()
+              typeof column.accessorFn !== "undefined" && column.getCanHide(),
           )
           .map((column) => {
             return (
@@ -248,9 +253,9 @@ export function DataTableViewOptions<TData>({
               >
                 {column.id}
               </DropdownMenuCheckboxItem>
-            )
+            );
           })}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

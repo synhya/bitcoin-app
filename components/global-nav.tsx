@@ -1,58 +1,51 @@
 "use client";
 
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import ThemeDropdown from "@/components/theme-dropdown";
-import Link from "next/link";
-import { ListItem } from "@/components/nav-list-item";
-import { Toggle } from "@/components/ui/toggle";
-import { FlaskConical, Music2 } from "lucide-react";
-import { usePathname, useSelectedLayoutSegment } from "next/navigation";
 import NavLinkItem from "@/components/nav-link-item";
+import { cn } from "@/lib/utils";
+import { useInView } from "react-intersection-observer";
 
 const GlobalNav = () => {
+  const [scrollY, setScrollY] = useState(0);
+  const onScroll = useCallback(() => {
+    const { scrollY } = window;
+    setScrollY(scrollY);
+  }, []);
+
+  useEffect(() => {
+    //add eventlistener to window
+    window.addEventListener("scroll", onScroll, { passive: true });
+    // remove event on unmount to prevent a memory leak with the cleanup
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [onScroll]);
+
   return (
-    <div className="fixed z-10 h-12 w-screen bg-background/70">
+    <div
+      className={cn(
+        "fixed z-10 h-12 w-screen bg-background/70 transition-colors duration-700",
+        {
+          "bg-primary": scrollY > 0,
+        },
+      )}
+    >
       <div className={"flex h-full justify-center"}>
         <NavigationMenu>
           <NavigationMenuList>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger className="bg-transparent">
-                About me
-              </NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid grid-cols-1 w-[112px] gap-3 p-4">
-                  <ListItem href={"/"}>Intro</ListItem>
-                  <ListItem>Item1</ListItem>
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavLinkItem path={"/anime"} title={"Anime"} />
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavLinkItem path={"/coin"} title={"Bitcoin"} />
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <ThemeDropdown />
-            </NavigationMenuItem>
+            <NavigationMenuItem></NavigationMenuItem>
+            <NavigationMenuItem>{"Bitcoin Demo App"}</NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
       </div>
       <div className={"absolute top-1 right-3.5 hidden min-[450px]:flex"}>
-        <Toggle>
-          <Music2 size={17} />
-        </Toggle>
+        <ThemeDropdown />
       </div>
     </div>
   );

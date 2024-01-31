@@ -1,12 +1,19 @@
-"use client"
+"use client";
 
 import {
-  ColumnDef, ColumnFiltersState,
+  ColumnDef,
+  ColumnFiltersState,
   flexRender,
-  getCoreRowModel, getFilteredRowModel,
-  getPaginationRowModel, getSortedRowModel, PaginationState, RowSelectionState, SortingState,
-  useReactTable, VisibilityState,
-} from '@tanstack/react-table'
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  PaginationState,
+  RowSelectionState,
+  SortingState,
+  useReactTable,
+  VisibilityState,
+} from "@tanstack/react-table";
 
 import {
   Table,
@@ -15,35 +22,60 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Button } from '@/components/ui/button'
-import React, { useState } from 'react'
-import { Input } from '@/components/ui/input'
-import { DataTablePagination, DataTableViewOptions } from '@/components/ui/data-table-components'
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import React, { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+import {
+  DataTablePagination,
+  DataTableViewOptions,
+} from "@/components/ui/data-table-components";
+import { cn } from "@/lib/utils";
+import { columnKeys } from "@/components/coin-page-specific/coin-table-columns";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { PageProps } from "@/app/page";
+import { usePage } from "@/lib/hooks/usePage";
+import Timer from "@/components/coin-page-specific/timer";
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting]
-    = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters]
-    = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility]
-    = useState<VisibilityState>({ 'symbol':false })
-  const [rowSelection, setRowSelection]
-    = useState<RowSelectionState>({})
+  const { replace } = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const [pagination, setPagination]
-    = useState<PaginationState>({pageIndex: 1, pageSize: 5})
+  const page = Number(searchParams.get("page") ?? "1") - 1; // starts with 0
 
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    symbol: false,
+    price_KRW: false,
+    market_cap_KRW: false,
+    id: false,
+  });
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
-  // fix columns here.
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: usePage((state) => state.pageSize),
+  });
+
+  // 왜인지 state 가 유지가 안됨 되야 정상인데. 따라서 일단 이렇게.
+  useEffect(() => {
+    setPagination((prev) => ({
+      ...prev,
+      pageIndex: page,
+    }));
+    // console.log(page);
+  }, [page, searchParams]);
+
   const table = useReactTable({
     data,
     columns,
@@ -51,6 +83,7 @@ export function DataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -60,6 +93,7 @@ export function DataTable<TData, TValue>({
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination,
     },
     // initialState: {
     //   columnVisibility: {
@@ -68,33 +102,63 @@ export function DataTable<TData, TValue>({
     // }
   });
 
+  // 페이지의 경우 useRouter 쓰지 말자. <LINK />로 해결되니까 바꿔주자.
+  // ++ 그냥 재마운트 하지말고 내용만 바꿔주는 식으로하자 (reactQuery)
+  const rowClickHandler = (symbol: string) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("symbol", symbol);
+
+    // in case of searching.
+    newSearchParams.set("page", (pagination.pageIndex + 1).toString());
+
+    // get search params change symbol query, replace.
+    replace(`${pathname}?${newSearchParams.toString()}`);
+  };
+
+  const displayedCoin = searchParams.get("symbol");
+
   return (
-    <div className="w-full">
-      <div className="flex items-center py-2 gap-2">
+    <div id="coin-table" className="w-full">
+      <div className="flex items-center justify-between py-2 gap-2">
         <Input
-          placeholder="Filter names..."
+          placeholder="이름을 입력하세요.."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(e) =>
             table.getColumn("name")?.setFilterValue(e.target.value)
           }
-          className="max-w-sm h-8 focus-visible:ring-amber-300 focus-visible:ring-1"
+          className="max-w-sm h-8 focus-visible:ring-amber-300 focus-visible:ring-1 focus-visible:ring-offset-accent transition-colors duration-500"
         />
         {/*<DataTableViewOptions table={table} />*/}
       </div>
       <div className="rounded-md border">
-        <Table>
+        <Table className="flex flex-col w-full">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow
+                key={headerGroup.id}
+                className="flex justify-between content-center"
+              >
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      className={cn("h-10 min-w-24 p-1 flex items-center", {
+                        "min-w-16 w-16": header.id === columnKeys.rank,
+                        "w-52": header.id === columnKeys.name,
+                        "justify-center min-w-[80px] w-[80px] pl-3":
+                          header.id === columnKeys.percent_change_1h ||
+                          header.id === columnKeys.percent_change_24h,
+                        "min-w-40 w-40 justify-center":
+                          header.id === columnKeys.market_cap,
+                        "w-28 pr-3 justify-end": header.id === columnKeys.price,
+                      })}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header, // comp
-                          header.getContext(), // props
-                        )}
+                            header.column.columnDef.header, // comp
+                            header.getContext(), // props
+                          )}
                     </TableHead>
                   );
                 })}
@@ -107,9 +171,33 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className={cn(
+                    "flex justify-between content-center cursor-pointer",
+                    {
+                      "border-amber-300 border":
+                        displayedCoin ===
+                        row.getValue<string>(columnKeys.symbol),
+                    },
+                  )}
+                  onClick={() =>
+                    rowClickHandler(row.getValue<string>(columnKeys.symbol))
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className={cn("h-12 p-1 min-w-24 flex items-center", {
+                        "min-w-16 w-16": cell.column.id === columnKeys.rank,
+                        "w-52 pl-3": cell.column.id === columnKeys.name,
+                        "justify-center min-w-[80px] w-[80px] pr-3":
+                          cell.column.id === columnKeys.percent_change_1h ||
+                          cell.column.id === columnKeys.percent_change_24h,
+                        "min-w-40 pr-3 w-40 justify-end":
+                          cell.column.id === columnKeys.market_cap,
+                        "w-28 pr-3 justify-end":
+                          cell.column.id === columnKeys.price,
+                      })}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -137,4 +225,3 @@ export function DataTable<TData, TValue>({
     </div>
   );
 }
-

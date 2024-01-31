@@ -8,4 +8,5 @@ export const cryptoPath = {
   tickersUrl: baseUrl + '/cryptocurrency/listings/latest',
   quotesUrl: baseUrl + '/cryptocurrency/quotes/latest',
   globalUrl: baseUrl + '/global-metrics/quotes/latest',
+  toolsUrl: baseUrl + '/tools/price-conversion',
 }
