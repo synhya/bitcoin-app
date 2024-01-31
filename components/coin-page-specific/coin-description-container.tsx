@@ -20,6 +20,10 @@ import {
 } from "@/components/ui/tooltip";
 import CoinPriceChart from "@/components/coin-page-specific/coin-price-chart";
 import CoinPriceCard from "@/components/coin-page-specific/coin-price-card";
+import {
+  APITooltip,
+  DominanceTooltip,
+} from "@/components/coin-page-specific/coin-tooltips";
 
 const CoinDescriptionContainer = async ({ symbol }: { symbol: string }) => {
   const [quotesData, metadata] = await Promise.all([
@@ -111,31 +115,7 @@ const CoinDescriptionContainer = async ({ symbol }: { symbol: string }) => {
         <div className="relative w-full flex h-[200px] py-4 px-8 border rounded-md hover:border-amber-300 transition-colors duration-500">
           <CoinPriceChart data={priceChartData} />
           <div className="absolute top-4 right-4">
-            <TooltipProvider delayDuration={200}>
-              <Tooltip>
-                <TooltipTrigger>
-                  <AlertCircleIcon className="text-accent-foreground/60 cursor-default" />
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  <div className="w-48 ">
-                    <a
-                      target="_blank"
-                      href="https://coinmarketcap.com/api/"
-                      className="text-pretty text-accent-foreground/90 flex w-fit hover:text-primary transition-colors duration-500"
-                    >
-                      From CoinMarketCap <LinkIcon size={12} />
-                    </a>
-                    <p className="text-xs text-pretty w-48 text-accent-foreground/60">
-                      서버에 캐싱하고 1분마다 서버 캐시를 업데이트 합니다.
-                    </p>
-                    <p className="text-xs text-pretty w-48 text-accent-foreground/60">
-                      아래 테이블과 다른 API를 접근하기 때문에 값이 다를 수
-                      있습니다.
-                    </p>
-                  </div>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <APITooltip />
           </div>
         </div>
         {/*<div className="hidden lg:flex lg:flex-col lg:w-1/3 border rounded-md px-4 py-4 hover:border-amber-300 transition-colors duration-500">*/}
@@ -152,22 +132,7 @@ const CoinDescriptionContainer = async ({ symbol }: { symbol: string }) => {
         <div className="relative h-[280px]">
           <CoinPieChart name="도미넌스" data={dominanceData} activeIndex={0} />
           <div className="absolute top-0 right-0">
-            <TooltipProvider delayDuration={200}>
-              <Tooltip>
-                <TooltipTrigger>
-                  <HelpCircleIcon className="text-accent-foreground/60 cursor-default" />
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  <p className="text-pretty w-48 text-accent-foreground/90">
-                    도미넌스란
-                  </p>
-                  <p className="text-xs text-pretty w-48 text-accent-foreground/60">
-                    전체 가상화폐 시장 시가총액에서 코인의 총액이 몇 퍼센트인지
-                    나타내는 수치입니다
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <DominanceTooltip />
           </div>
         </div>
       </div>
