@@ -30,9 +30,9 @@ const GlobalNav = () => {
   return (
     <div
       className={cn(
-        "fixed z-10 h-12 w-screen bg-background/70 transition-colors duration-700",
+        "backdrop-blur-sm fixed z-10 h-12 w-screen bg-background/70 transition-colors duration-700",
         {
-          "bg-primary/70": scrollY > 0,
+          "bg-primary/50": scrollY > 0,
         },
       )}
     >

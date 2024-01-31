@@ -95,8 +95,6 @@ const CoinDescriptionContainer = async ({ symbol }: { symbol: string }) => {
     value: priceData.price * (1 + 0.01 * d.value),
   }));
 
-  console.log(priceData.price);
-
   return (
     <div className="flex flex-col w-full gap-2">
       <div className="flex justify-between items-center">
