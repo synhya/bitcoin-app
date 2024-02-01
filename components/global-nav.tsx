@@ -48,7 +48,7 @@ const GlobalNav = () => {
           </NavigationMenuList>
         </NavigationMenu>
       </div>
-      <div className={"absolute top-1 right-3.5 hidden min-[450px]:flex"}>
+      <div className={"absolute top-1 right-3.5 hidden min-[270px]:flex"}>
         <ThemeDropdown />
       </div>
     </div>
