@@ -112,7 +112,7 @@ const CoinDescriptionContainer = async ({ symbol }: { symbol: string }) => {
         {/*</div>*/}
       </div>
       <div className="flex w-full gap-2">
-        <div className="relative w-full flex h-[200px] py-4 px-8 border rounded-md hover:border-amber-300 transition-colors duration-500">
+        <div className="relative w-full flex h-[200px] py-4 px-0 min-[400px]:px-8 border rounded-md hover:border-amber-300 transition-colors duration-500">
           <CoinPriceChart data={priceChartData} />
           <div className="absolute top-4 right-4">
             <APITooltip />

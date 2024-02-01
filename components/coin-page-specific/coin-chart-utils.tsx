@@ -84,22 +84,24 @@ export const renderActiveShape = (props: any) => {
         innerRadius={outerRadius + 6}
         outerRadius={outerRadius + 10}
         fill={fill}
-      />
-      <path
-        d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`}
-        stroke={fill}
-        fill="none"
-      />
-      <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-      <text
-        x={ex + (cos >= 0 ? 1 : -1) * 6}
-        y={ey}
-        dy={5}
-        textAnchor={textAnchor}
-        fill="#999"
-      >
-        {`${(percent * 100).toFixed(3)}%`}
-      </text>
+      />{" "}
+      <g className="hidden min-[400px]:flex">
+        <path
+          d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`}
+          stroke={fill}
+          fill="none"
+        />
+        <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
+        <text
+          x={ex + (cos >= 0 ? 1 : -1) * 6}
+          y={ey}
+          dy={5}
+          textAnchor={textAnchor}
+          fill="#999"
+        >
+          {`${(percent * 100).toFixed(3)}%`}
+        </text>
+      </g>
     </g>
   );
 };

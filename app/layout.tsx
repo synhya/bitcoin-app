@@ -29,7 +29,9 @@ export default function RootLayout({
         >
           <GlobalNav />
           {/*<SidebarDesktop />*/}
-          <div className="px-12 pb-12 pt-16">{children}</div>
+          <div className="px-2 min-[400px]:px-6 md:px-12 pb-12 pt-16 transition-all duration-500">
+            {children}
+          </div>
         </ThemeProvider>
       </body>
     </html>
