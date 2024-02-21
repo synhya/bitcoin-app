@@ -50,6 +50,7 @@ export const getQuotes = async (
         next: {
           revalidate: 60,
         },
+        cache: "force-cache",
       },
     )
       .then((r) => r.json())
@@ -80,6 +81,7 @@ export const getTableData = async (
         next: {
           revalidate: 60,
         },
+        cache: "force-cache",
       })
         .then((r) => r.json())
         .then<CoinResponseData[]>((r) => r.data),
@@ -89,6 +91,7 @@ export const getTableData = async (
         next: {
           revalidate: 60,
         },
+        cache: "force-cache",
       })
         .then((r) => r.json())
         .then<CoinResponseData[]>((r) => r.data),
@@ -116,6 +119,7 @@ export const getMetadata = async (
         next: {
           revalidate: 60,
         },
+        cache: "force-cache",
       },
     )
       .then((r) => r.json())

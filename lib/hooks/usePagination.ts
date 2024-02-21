@@ -21,13 +21,13 @@ export const usePageSize = create(
   ),
 );
 
-type PageCountState = {
+type PageIndexState = {
   pageIndex: number;
   setPageIndexState: (pageSize: number) => void;
 };
 
 export const usePageIndex = create(
-  persist<PageCountState>(
+  persist<PageIndexState>(
     (set) => ({
       pageIndex: 0,
       setPageIndexState: (pageIndex) =>

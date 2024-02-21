@@ -40,16 +40,13 @@ interface DataTablePaginationProps<TData> {
 export function DataTablePagination<TData>({
   table,
 }: DataTablePaginationProps<TData>) {
-  const searchParams = useSearchParams();
-  const { replace } = useRouter();
-  const pathName = usePathname();
   const setPageSizeState = usePageSize((state) => state.setPageSizeState);
   const setPageIndexState = usePageIndex((state) => state.setPageIndexState);
 
   // index start from 0
   const handlePageClick = (index: number) => {
-    table.setPageIndex(index);
     setPageIndexState(index);
+    table.setPageIndex(index);
 
     // const newSearchParams = new URLSearchParams(searchParams);
     // newSearchParams.set("page", (index + 1).toString());

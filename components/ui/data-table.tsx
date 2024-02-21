@@ -24,7 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import {
   DataTablePagination,
@@ -49,6 +49,7 @@ export function DataTable<TData, TValue>({
   const { replace } = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const displayedCoin = searchParams.get("symbol");
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -64,6 +65,22 @@ export function DataTable<TData, TValue>({
     pageIndex: usePageIndex((state) => state.pageIndex),
     pageSize: usePageSize((state) => state.pageSize),
   });
+
+  const { pageIndex, setPageIndexState } = usePageIndex();
+  const savedPageSize = usePageSize((state) => state.pageSize);
+  useEffect(() => {
+    setPagination((prev) => ({
+      ...prev,
+      pageIndex: pageIndex,
+    }));
+  }, [pageIndex, displayedCoin]);
+  useEffect(() => {
+    setPageIndexState(table.getState().pagination.pageIndex);
+    setPagination((prev) => ({
+      ...prev,
+      pageSize: savedPageSize,
+    }));
+  }, [savedPageSize]);
 
   const table = useReactTable({
     data,
@@ -98,8 +115,6 @@ export function DataTable<TData, TValue>({
     // get search params change symbol query, replace.
     replace(`${pathname}?${newSearchParams.toString()}`);
   };
-
-  const displayedCoin = searchParams.get("symbol");
 
   return (
     <div id="coin-table" className="w-full">
