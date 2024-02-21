@@ -16,6 +16,7 @@ export type PageProps = {
 };
 
 export const revalidate = 60;
+export const fetchCache = "force-cache";
 
 const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
   const symbol = searchParams?.symbol ?? "BTC";
