@@ -15,6 +15,7 @@ export type PageProps = {
   page: number;
 };
 
+export const dynamic = "force-static";
 export const revalidate = 60;
 
 const Page = async ({ searchParams }: { searchParams: SearchParams }) => {

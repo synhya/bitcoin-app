@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { getMetadata, getQuotes } from "@/lib/apis/coin-api";
 import { CoinMetadata, CoinResponseData } from "@/lib/apis/query-types";
 
+// defaults to dynamic because of headers
 // export const dynamic = "force-dynamic"; // defaults to auto
-export const revalidate = 300;
+// export const revalidate = 300;
 // same as unstable_noStore()
 
 export type Coin = {
