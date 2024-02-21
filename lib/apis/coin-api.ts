@@ -48,7 +48,7 @@ export const getQuotes = async (
         method: "GET",
         headers: cryptoApiHeaders,
         next: {
-          // revalidate: 60,
+          revalidate: 60,
         },
       },
     )
@@ -78,7 +78,7 @@ export const getTableData = async (
         method: "GET",
         headers: cryptoApiHeaders,
         next: {
-          // revalidate: 60,
+          revalidate: 60,
         },
       })
         .then((r) => r.json())
@@ -87,7 +87,7 @@ export const getTableData = async (
         method: "GET",
         headers: cryptoApiHeaders,
         next: {
-          // revalidate: 60,
+          revalidate: 60,
         },
       })
         .then((r) => r.json())
@@ -114,7 +114,7 @@ export const getMetadata = async (
         method: "GET",
         headers: cryptoApiHeaders,
         next: {
-          // revalidate: 60,
+          revalidate: 60,
         },
       },
     )
