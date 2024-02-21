@@ -15,7 +15,6 @@ export type PageProps = {
   page: number;
 };
 
-export const dynamic = "force-static";
 export const revalidate = 60;
 
 const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
@@ -26,7 +25,7 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
       <CoinDescriptionContainer symbol={symbol} />
       {/*<Suspense key="1" fallback={<CoinDescriptionContainerSkeleton />}>*/}
       {/*</Suspense>*/}
-      <Suspense key="2" fallback={<CoinTableSkeleton />}>
+      <Suspense fallback={<CoinTableSkeleton />}>
         <CoinTable />
       </Suspense>
     </div>

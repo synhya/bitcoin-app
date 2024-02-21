@@ -34,7 +34,7 @@ import { cn } from "@/lib/utils";
 import { columnKeys } from "@/components/coin-page-specific/coin-table-columns";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PageProps } from "@/app/page";
-import { usePage } from "@/lib/hooks/usePage";
+import { usePageIndex, usePageSize } from "@/lib/hooks/usePagination";
 import Timer from "@/components/coin-page-specific/timer";
 
 interface DataTableProps<TData, TValue> {
@@ -50,8 +50,6 @@ export function DataTable<TData, TValue>({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const page = Number(searchParams.get("page") ?? "1") - 1; // starts with 0
-
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
@@ -63,18 +61,9 @@ export function DataTable<TData, TValue>({
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: usePage((state) => state.pageSize),
+    pageIndex: usePageIndex((state) => state.pageIndex),
+    pageSize: usePageSize((state) => state.pageSize),
   });
-
-  // 왜인지 state 가 유지가 안됨 되야 정상인데. 따라서 일단 이렇게.
-  useEffect(() => {
-    setPagination((prev) => ({
-      ...prev,
-      pageIndex: page,
-    }));
-    // console.log(page);
-  }, [page, searchParams]);
 
   const table = useReactTable({
     data,
@@ -95,11 +84,6 @@ export function DataTable<TData, TValue>({
       rowSelection,
       pagination,
     },
-    // initialState: {
-    //   columnVisibility: {
-    //     'test': false,
-    //   }
-    // }
   });
 
   // 페이지의 경우 useRouter 쓰지 말자. <LINK />로 해결되니까 바꿔주자.
@@ -109,7 +93,7 @@ export function DataTable<TData, TValue>({
     newSearchParams.set("symbol", symbol);
 
     // in case of searching.
-    newSearchParams.set("page", (pagination.pageIndex + 1).toString());
+    // newSearchParams.set("page", (pagination.pageIndex + 1).toString());
 
     // get search params change symbol query, replace.
     replace(`${pathname}?${newSearchParams.toString()}`);

@@ -31,7 +31,7 @@ import { Column } from "@tanstack/react-table";
 import { cn } from "@/lib/utils";
 import React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { usePage } from "@/lib/hooks/usePage";
+import { usePageIndex, usePageSize } from "@/lib/hooks/usePagination";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
@@ -43,14 +43,18 @@ export function DataTablePagination<TData>({
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathName = usePathname();
-  const setPageState = usePage((state) => state.setPageState);
+  const setPageSizeState = usePageSize((state) => state.setPageSizeState);
+  const setPageIndexState = usePageIndex((state) => state.setPageIndexState);
 
   // index start from 0
   const handlePageClick = (index: number) => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set("page", (index + 1).toString());
+    table.setPageIndex(index);
+    setPageIndexState(index);
 
-    replace(`${pathName}?${newSearchParams.toString()}#coin-table`);
+    // const newSearchParams = new URLSearchParams(searchParams);
+    // newSearchParams.set("page", (index + 1).toString());
+    //
+    // replace(`${pathName}?${newSearchParams.toString()}#coin-table`);
   };
 
   return (
@@ -65,8 +69,9 @@ export function DataTablePagination<TData>({
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
-              setPageState(Number(value));
-              table.setPageSize(Number(value));
+              const valueAsNumber = Number(value);
+              setPageSizeState(valueAsNumber);
+              table.setPageSize(valueAsNumber);
             }}
           >
             <SelectTrigger className="h-8 w-[70px]">
@@ -99,9 +104,8 @@ export function DataTablePagination<TData>({
             <Button
               variant="outline"
               className="h-8 w-8 p-0"
-              onClick={
-                () => handlePageClick(table.getState().pagination.pageIndex - 1)
-                // table.previousPage()
+              onClick={() =>
+                handlePageClick(table.getState().pagination.pageIndex - 1)
               }
               disabled={!table.getCanPreviousPage()}
             >
