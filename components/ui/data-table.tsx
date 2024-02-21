@@ -23,19 +23,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import {
-  DataTablePagination,
-  DataTableViewOptions,
-} from "@/components/ui/data-table-components";
+import { DataTablePagination } from "@/components/ui/data-table-components";
 import { cn } from "@/lib/utils";
 import { columnKeys } from "@/components/coin-page-specific/coin-table-columns";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { PageProps } from "@/app/page";
 import { usePageIndex, usePageSize } from "@/lib/hooks/usePagination";
-import Timer from "@/components/coin-page-specific/timer";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

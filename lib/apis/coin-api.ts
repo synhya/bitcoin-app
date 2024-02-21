@@ -4,18 +4,14 @@ import { cryptoPath } from "@/lib/apis/path";
 import {
   IdMapResponse,
   MapQueryParams,
-  QuoteResponse,
   QuoteQueryParams,
-  MetadataResponse,
   MetadataQueryParams,
   TickerQueryParams,
-  TickerResponse,
   TableCoinData,
   CoinResponseData,
   ConvertQueryParams,
   CoinMetadata,
 } from "@/lib/apis/query-types";
-import { unstable_noStore } from "next/cache";
 
 const cryptoApiHeaders = {
   "X-CMC_PRO_API_KEY": process.env.NEXT_PUBLIC_COIN_MARKET_API_KEY ?? "",

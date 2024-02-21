@@ -2,7 +2,6 @@ import React, { Suspense } from "react";
 import CoinDescriptionContainer from "@/components/coin-page-specific/coin-description-container";
 import CoinTable from "@/components/coin-page-specific/coin-table";
 import { CoinTableSkeleton } from "@/components/coin-page-specific/coin-table-skeleton";
-import CoinDescriptionContainerSkeleton from "@/components/coin-page-specific/coin-description-container-skeleton";
 
 type SearchParams = {
   query?: string;

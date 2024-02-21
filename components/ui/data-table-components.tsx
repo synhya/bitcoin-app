@@ -21,7 +21,6 @@ import {
   ArrowDownIcon,
   ArrowLeftIcon,
   ArrowRightIcon,
-  ArrowUpDown,
   ArrowUpIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -30,7 +29,6 @@ import {
 import { Column } from "@tanstack/react-table";
 import { cn } from "@/lib/utils";
 import React from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { usePageIndex, usePageSize } from "@/lib/hooks/usePagination";
 
 interface DataTablePaginationProps<TData> {
